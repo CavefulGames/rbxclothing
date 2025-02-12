@@ -1,0 +1,118 @@
+name = "caveful_games/rbxclothing"
+version = "0.1.0"
+target = "roblox_server"
+
+[graph."0x5eal/unzip@0.1.0 luau"]
+resolved_ty = "standard"
+
+[graph."0x5eal/unzip@0.1.0 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
+
+[graph."0x5eal/unzip@0.1.0 luau".pkg_ref.dependencies]
+asciitable = [{ name = "kimpure/asciitable", version = "^0.1.4", index = "https://github.com/pesde-pkg/index" }, "dev"]
+frktest = [{ name = "itsfrank/frktest", version = "^0.0.2", index = "https://github.com/pesde-pkg/index", target = "lune" }, "dev"]
+luau-lsp = [{ name = "pesde/luau_lsp", version = "^1.38.0", index = "https://github.com/pesde-pkg/index", target = "lune" }, "dev"]
+stylua = [{ name = "pesde/stylua", version = "^2.0.2", index = "https://github.com/pesde-pkg/index", target = "lune" }, "dev"]
+
+[graph."jiwonz/dirs@0.1.2 lune"]
+resolved_ty = "standard"
+
+[graph."jiwonz/dirs@0.1.2 lune".dependencies]
+"jiwonz/pathfs@0.1.0 lune" = "pathfs"
+
+[graph."jiwonz/dirs@0.1.2 lune".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
+
+[graph."jiwonz/dirs@0.1.2 lune".pkg_ref.dependencies]
+pathfs = [{ name = "jiwonz/pathfs", version = "^0.1.0", index = "https://github.com/daimond113/pesde-index" }, "standard"]
+
+[graph."jiwonz/pathfs@0.1.0 lune"]
+resolved_ty = "standard"
+
+[graph."jiwonz/pathfs@0.1.0 lune".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
+
+[graph."lukadev_0/option@1.2.0 lune"]
+resolved_ty = "standard"
+
+[graph."lukadev_0/option@1.2.0 lune".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/daimond113/pesde-index"
+
+[graph."lukadev_0/result@1.2.0 lune"]
+resolved_ty = "standard"
+
+[graph."lukadev_0/result@1.2.0 lune".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/daimond113/pesde-index"
+
+[graph."pesde/rojo@7.4.4 lune"]
+direct = ["rojo", { name = "pesde/rojo", version = "^7.4.4", target = "lune" }, "dev"]
+resolved_ty = "dev"
+
+[graph."pesde/rojo@7.4.4 lune".dependencies]
+"lukadev_0/option@1.2.0 lune" = "option"
+"lukadev_0/result@1.2.0 lune" = "result"
+"pesde/toolchainlib@0.1.11 lune" = "core"
+
+[graph."pesde/rojo@7.4.4 lune".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
+
+[graph."pesde/rojo@7.4.4 lune".pkg_ref.dependencies]
+core = [{ name = "pesde/toolchainlib", version = "^0.1.1", index = "https://github.com/daimond113/pesde-index", target = "lune" }, "standard"]
+option = [{ name = "lukadev_0/option", version = "^1.2.0", index = "https://github.com/daimond113/pesde-index" }, "standard"]
+result = [{ name = "lukadev_0/result", version = "^1.2.0", index = "https://github.com/daimond113/pesde-index" }, "standard"]
+
+[graph."pesde/scripts_core@0.0.1 lune"]
+resolved_ty = "standard"
+
+[graph."pesde/scripts_core@0.0.1 lune".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
+
+[graph."pesde/scripts_core@0.0.1 lune".pkg_ref.dependencies]
+frktest = [{ name = "itsfrank/frktest", version = "^0.0.2", index = "https://github.com/pesde-pkg/index" }, "dev"]
+luau-lsp = [{ name = "pesde/luau_lsp", version = "^1.36.0", index = "https://github.com/pesde-pkg/index" }, "dev"]
+pathfs = [{ name = "jiwonz/pathfs", version = "^0.1.0", index = "https://github.com/pesde-pkg/index" }, "dev"]
+stylua = [{ name = "pesde/stylua", version = "^2.0.1", index = "https://github.com/pesde-pkg/index" }, "dev"]
+
+[graph."pesde/scripts_rojo@0.1.0 lune"]
+direct = ["scripts", { name = "pesde/scripts_rojo", version = "^0.1.0", target = "lune" }, "dev"]
+resolved_ty = "dev"
+
+[graph."pesde/scripts_rojo@0.1.0 lune".dependencies]
+"pesde/rojo@7.4.4 lune" = "rojo"
+"pesde/scripts_core@0.0.1 lune" = "core"
+
+[graph."pesde/scripts_rojo@0.1.0 lune".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
+
+[graph."pesde/scripts_rojo@0.1.0 lune".pkg_ref.dependencies]
+core = [{ name = "pesde/scripts_core", version = "^0.0.1", index = "https://github.com/pesde-pkg/index", target = "lune" }, "standard"]
+rojo = [{ name = "pesde/rojo", version = "^7.4.4", index = "https://github.com/pesde-pkg/index" }, "peer"]
+
+[graph."pesde/toolchainlib@0.1.11 lune"]
+resolved_ty = "standard"
+
+[graph."pesde/toolchainlib@0.1.11 lune".dependencies]
+"0x5eal/unzip@0.1.0 luau" = "unzip"
+"jiwonz/dirs@0.1.2 lune" = "dirs"
+"jiwonz/pathfs@0.1.0 lune" = "pathfs"
+"lukadev_0/option@1.2.0 lune" = "option"
+"lukadev_0/result@1.2.0 lune" = "result"
+
+[graph."pesde/toolchainlib@0.1.11 lune".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/daimond113/pesde-index"
+
+[graph."pesde/toolchainlib@0.1.11 lune".pkg_ref.dependencies]
+dirs = [{ name = "jiwonz/dirs", version = "^0.1.1", index = "https://github.com/pesde-pkg/index" }, "standard"]
+option = [{ name = "lukadev_0/option", version = "^1.2.0", index = "https://github.com/pesde-pkg/index" }, "peer"]
+pathfs = [{ name = "jiwonz/pathfs", version = "^0.1.0", index = "https://github.com/pesde-pkg/index" }, "standard"]
+result = [{ name = "lukadev_0/result", version = "^1.2.0", index = "https://github.com/pesde-pkg/index" }, "peer"]
+unzip = [{ name = "0x5eal/unzip", version = "^0.1.0", index = "https://github.com/pesde-pkg/index", target = "luau" }, "standard"]
