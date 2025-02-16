@@ -10,14 +10,17 @@ local test_project = {
             rbxclothing = {
                 ["$path"] = "src",
                 Packages = {
-                    ["$path"] = "luau_packages"
+                    ["$path"] = "roblox_packages"
                 }
             }
         },
 
         ServerScriptService = {
             rbxclothingTest = {
-                ["$path"] = "tests/test.server.luau"
+                ["$path"] = "tests/test.server.luau",
+                config = {
+                    ["$path"] = "tests/config.luau"
+                }
             }
         }
     }

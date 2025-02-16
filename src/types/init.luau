@@ -1,4 +1,4 @@
-local futures = require(script.Parent:WaitForChild('Packages'):WaitForChild('luau_futures'))
+local futures = require(script.Parent:WaitForChild('Packages'):WaitForChild('luau-futures'))
 local maps = require(script:WaitForChild('maps'))
 local R15Clothing = require(script:WaitForChild('R15Clothing'))
 

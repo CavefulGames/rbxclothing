@@ -5,7 +5,7 @@ local function rotatePoint(x: number, y: number, angle: number)
     return x * cos - y * sin, x * sin + y * cos
 end
 
-return function (baseEditableImage: EditableImage, wred: EditableImage, pixel: {
+return function (baseEditableImage: EditableImage, wred: EditableImage, map: {
     [string]: {
         position: Vector2,
         size: Vector2,
@@ -13,7 +13,7 @@ return function (baseEditableImage: EditableImage, wred: EditableImage, pixel: {
         rotation: number?,
     }
 })
-    for k, v in pairs(pixel) do
+    for k, v in map do
         local buf: buffer = baseEditableImage:ReadPixelsBuffer(
             v.position,
             v.size

@@ -6,7 +6,7 @@ local publish_project = {
     tree = {
         ["$path"] = "src",
         Packages = {
-            ["$path"] = "luau_packages"
+            ["$path"] = "roblox_packages"
         }
     }
 }

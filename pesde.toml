@@ -2,7 +2,7 @@ name = "caveful_games/rbxclothing"
 version = "0.1.0"
 authors = ["kimpure"]
 license = "MIT"
-includes = [ "pesde.toml", "readme.md", "licence.md", "src/**" ]
+includes = [ "pesde.toml", "README.md", "LICENSE", "src/**" ]
 
 [target]
 environment = "roblox"
@@ -11,6 +11,9 @@ build_files = ["src"]
 
 [indices]
 default = "https://github.com/pesde-pkg/index"
+
+[wally_indices]
+default = "https://github.com/UpliftGames/wally-index"
 
 [scripts]
 roblox_sync_config_generator = ".pesde/scripts/roblox_sync_config_generator.luau"
@@ -22,4 +25,4 @@ rojo = { name = "pesde/rojo", version = "^7.4.4", target = "lune" }
 
 [dependencies]
 pathfs = { name = "jiwonz/pathfs", version = "^0.6.0-rc.1", target = "lune" }
-luau_futures = { name = "yetanotherclown/luau_futures", version = "^2.0.0-beta.3", target = "luau" }
+luau-futures = { wally = "yetanotherclown/luau-futures", version = "^2.0.0-beta.3" }
