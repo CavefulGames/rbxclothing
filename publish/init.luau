@@ -4,7 +4,10 @@ local serde = require('@lune/serde')
 local publish_project = {
     name = "rbxclothing",
     tree = {
-        ["$path"] = "src"
+        ["$path"] = "src",
+        Packages = {
+            ["$path"] = "luau_packages"
+        }
     }
 }
 

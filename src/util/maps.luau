@@ -1,5 +1,6 @@
+local types = require(script.Parent.Parent:WaitForChild('types'))
 return {
-	R15 = {
+	R15Clothing = {
 		rightLimbs = {
 			{ --// U
 				position = Vector2.new(217, 289),
@@ -139,30 +140,4 @@ return {
 			},
 		},
 	},
-} :: {
-	R15: {
-		rightLimbs: {
-			[number]: { 
-				position: Vector2,
-				size: Vector2,
-				drawPosition: Vector2,
-				rotation: number?
-			}
-		},
-		leftLimbs: {
-			[number]: { 
-				position: Vector2,
-				size: Vector2,
-				drawPosition: Vector2,
-				rotation: number?
-			}
-		},
-		torso: {
-			[number]: { 
-				position: Vector2,
-				size: Vector2,
-				drawPosition: Vector2,
-			}
-		},
-	}
-}
+} :: types.Maps

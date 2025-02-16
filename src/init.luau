@@ -1,25 +1,36 @@
 local AssetService = game:GetService('AssetService')
-local R15 = require(script:WaitForChild('R15'))
+local drawMaps = require(script:WaitForChild('util'):WaitForChild('drawMaps'))
+local futures = require(script:WaitForChild('Packages'):WaitForChild('luau_futures'))
+local types = require(script:WaitForChild('types'))
+local maps = require(script:WaitForChild('util'):WaitForChild('maps')).R15Clothing
+local R15Clothing = require(script:WaitForChild('R15Clothing'))
 
-export type RbxClothing = {
-    R15: {
-        new: (content: Content) -> (R15.R15),
-    },
+local rbxclothing = {} :: types.Rbxclothing
+rbxclothing.R15Clothing = {
+    new = function(content)
+        local future = futures.Future.new(function(content: Content) 
+            local baseEditable = content.Object :: EditableImage
+            
+            local leftLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
+            local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
+            local torsoEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(388, 272) }
+
+            drawMaps(baseEditable, leftLimbsEditableImage, maps.leftLimbs :: any)
+            drawMaps(baseEditable, rightLimbsEditableImage, maps.rightLimbs :: any)
+            drawMaps(baseEditable, torsoEditableImage, maps.torso :: any)
+            
+            coroutine.yield()
+            
+            return setmetatable({
+                leftLimbsTexture = Content.fromObject(leftLimbsEditableImage),
+                rightLimbsTexture = Content.fromObject(rightLimbsEditableImage),
+                torsoTexture = Content.fromObject(torsoEditableImage),
+            }, R15Clothing) :: types.R15Clothing
+        end, content)
+        
+        return future:poll()
+    end,
+    maps = maps, 
 }
-
-local rbxclothing = {} :: RbxClothing
-rbxclothing.R15 = {} :: any
-
-function rbxclothing.R15.new(content)
-    local editableImage = AssetService:CreateEditableImageAsync(content)
-    
-    if editableImage.Size.X ~= 585 or editableImage.Size.Y ~= 559 then
-        error('content size is not 585 * 559')
-    end
-
-    return setmetatable({
-        editableImage=editableImage,
-    }, R15)
-end
 
 return rbxclothing

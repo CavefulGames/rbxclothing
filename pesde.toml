@@ -2,10 +2,10 @@ name = "caveful_games/rbxclothing"
 version = "0.1.0"
 authors = ["kimpure"]
 license = "MIT"
-includes = [ "pesde.toml", "readme.md", "licence.md", "src/**/*.luau" ]
+includes = [ "pesde.toml", "readme.md", "licence.md", "src/**" ]
 
 [target]
-environment = "roblox_server"
+environment = "roblox"
 lib = "src/init.luau"
 build_files = ["src"]
 
@@ -22,3 +22,4 @@ rojo = { name = "pesde/rojo", version = "^7.4.4", target = "lune" }
 
 [dependencies]
 pathfs = { name = "jiwonz/pathfs", version = "^0.6.0-rc.1", target = "lune" }
+luau_futures = { name = "yetanotherclown/luau_futures", version = "^2.0.0-beta.3", target = "luau" }

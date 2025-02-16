@@ -163,3 +163,11 @@ option = [{ name = "lukadev_0/option", version = "^1.2.0", index = "https://gith
 pathfs = [{ name = "jiwonz/pathfs", version = "^0.1.0", index = "https://github.com/pesde-pkg/index" }, "standard"]
 result = [{ name = "lukadev_0/result", version = "^1.2.0", index = "https://github.com/pesde-pkg/index" }, "peer"]
 unzip = [{ name = "0x5eal/unzip", version = "^0.1.0", index = "https://github.com/pesde-pkg/index", target = "luau" }, "standard"]
+
+[graph."yetanotherclown/luau_futures@2.0.0-beta.3 luau"]
+direct = ["luau_futures", { name = "yetanotherclown/luau_futures", version = "^2.0.0-beta.3", target = "luau" }, "standard"]
+resolved_ty = "standard"
+
+[graph."yetanotherclown/luau_futures@2.0.0-beta.3 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"

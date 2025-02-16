@@ -8,7 +8,10 @@ local test_project = {
 
         ReplicatedStorage = {
             rbxclothing = {
-                ["$path"] = "src"
+                ["$path"] = "src",
+                Packages = {
+                    ["$path"] = "luau_packages"
+                }
             }
         },
 

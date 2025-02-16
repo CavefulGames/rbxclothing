@@ -1,2 +1,3 @@
-lune run publish/command
+lune run publish
+
 pesde publish

@@ -1,1 +1,1 @@
-{"name":"rbxclothing","tree":{"$className":"DataModel","ReplicatedStorage":{"rbxclothing":{"$path":"src"}},"ServerScriptService":{"rbxclothingTest":{"$path":"tests/test.server.luau"}}}}
+{"name":"rbxclothing","tree":{"$className":"DataModel","ReplicatedStorage":{"rbxclothing":{"$path":"src","Packages":{"$path":"luau_packages"}}},"ServerScriptService":{"rbxclothingTest":{"$path":"tests/test.server.luau"}}}}
