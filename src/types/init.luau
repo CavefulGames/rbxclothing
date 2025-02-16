@@ -9,7 +9,7 @@ local rbxclothing = rbxclothing
 ]=]
 export type Rbxclothing = {
     R15Clothing: {
-        new: (content: Content) -> futures.Poll<Content, R15Clothing>,
+        new: (content: Content) -> futures.Future<Content, R15Clothing>,
         maps: maps.R15ClothingMaps,
     },
 }

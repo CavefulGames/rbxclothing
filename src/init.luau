@@ -8,7 +8,7 @@ local R15Clothing = require(script:WaitForChild('R15Clothing'))
 local rbxclothing = {} :: types.Rbxclothing
 rbxclothing.R15Clothing = {
     new = function(content)
-        local future = futures.Future.new(function(content: Content)
+        return futures.Future.new(function(content: Content)
             local baseEditable = AssetService:CreateEditableImageAsync(content)
             
             local leftLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
@@ -24,11 +24,7 @@ rbxclothing.R15Clothing = {
                 rightLimbsTexture = Content.fromObject(rightLimbsEditableImage),
                 torsoTexture = Content.fromObject(torsoEditableImage),
             }, R15Clothing) :: types.R15Clothing
-        end, content)
-
-        future:await()
-        
-        return future:poll()
+        end, content) :: any
     end,
     maps = maps, 
 }

@@ -16,5 +16,4 @@ export type Clothing = typeof(setmetatable({} :: {
     torsoTexture: Content,
 }, {} :: ClothingImpl))
 
-
 return {}
