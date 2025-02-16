@@ -1,11 +1,17 @@
 local AssetService = game:GetService('AssetService')
-local drawMaps = require(script:WaitForChild('util'):WaitForChild('drawMaps'))
-local futures = require(script:WaitForChild('Packages'):WaitForChild('luau-futures'))
-local types = require(script:WaitForChild('types'))
-local maps = require(script:WaitForChild('util'):WaitForChild('maps')).R15Clothing
-local R15Clothing = require(script:WaitForChild('R15Clothing'))
+local drawMaps = require(script.util.drawMaps)
+local futures = require(script.Packages["luau-futures"])
+local maps = require(script.util.maps)
+local R15Clothing = require(script.R15Clothing)
 
-local rbxclothing = {} :: types.Rbxclothing
+export type Rbxclothing = {
+    R15Clothing: {
+        new: (content: Content) -> futures.Future<nil, R15Clothing.R15Clothing>,
+        maps: maps.R15ClothingMaps,
+    },
+}
+
+local rbxclothing = {} :: Rbxclothing
 rbxclothing.R15Clothing = {
     new = function(content)
         return futures.Future.new(function(content: Content)
@@ -15,18 +21,18 @@ rbxclothing.R15Clothing = {
             local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
             local torsoEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(388, 272) }
 
-            drawMaps(baseEditable, leftLimbsEditableImage, maps.leftLimbs :: any)
-            drawMaps(baseEditable, rightLimbsEditableImage, maps.rightLimbs :: any)
-            drawMaps(baseEditable, torsoEditableImage, maps.torso :: any)
+            drawMaps(baseEditable, leftLimbsEditableImage, maps.R15Clothing.leftLimbs :: any)
+            drawMaps(baseEditable, rightLimbsEditableImage, maps.R15Clothing.rightLimbs :: any)
+            drawMaps(baseEditable, torsoEditableImage, maps.R15Clothing.torso :: any)
 
             return setmetatable({
                 leftLimbsTexture = Content.fromObject(leftLimbsEditableImage),
                 rightLimbsTexture = Content.fromObject(rightLimbsEditableImage),
                 torsoTexture = Content.fromObject(torsoEditableImage),
-            }, R15Clothing) :: types.R15Clothing
+            }, R15Clothing) :: R15Clothing.R15Clothing
         end, content) :: any
     end,
-    maps = maps, 
+    maps = maps.R15Clothing, 
 }
 
 return rbxclothing

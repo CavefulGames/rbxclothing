@@ -1,5 +1,5 @@
 local rbxclothing = require(game:GetService('ReplicatedStorage'):WaitForChild('rbxclothing'))
-local config = require(script:WaitForChild('config'))
+local config = require(script.config)
 
 for i, v in config.rigNames do
     local rig = workspace:WaitForChild(v)
