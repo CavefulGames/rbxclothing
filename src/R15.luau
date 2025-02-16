@@ -1,5 +1,6 @@
 local AssetService = game:GetService('AssetService')
-local pixel = require('./pixel')
+local pixel = require('./util/pixel')
+local draw = require('./util/draw')
 
 export type R15 = typeof(setmetatable({} :: {
     editableImage: EditableImage,
@@ -20,44 +21,6 @@ export type R15Impl = {
     __index: R15Impl,
     unwrap: (self: R15) -> Result,
 }
-
-local function drawEdit(baseEditableImage: EditableImage, wred: EditableImage, pixel: {
-	[string]: {
-		position: Vector2,
-		size: Vector2,
-		drawPosition: Vector2,
-		rotation: number?,
-	}
-})
-	for k, v in pixel do
-		local buf = baseEditableImage:ReadPixelsBuffer(
-			v.position,
-			v.size + Vector2.one
-		)
-
-		if (v :: any).rotation then
-			local drawEditableImage = AssetService:CreateEditableImage { Size = v.size + Vector2.one }
-			drawEditableImage:WritePixelsBuffer(Vector2.zero, v.size + Vector2.one, buf)
-
-			wred:DrawImageTransformed(
-				v.drawPosition + (v.size + Vector2.one) / 2,
-				Vector2.one,
-				(v :: any).rotation,
-				drawEditableImage
-			)
-			
-			drawEditableImage:Destroy()
-			
-			continue
-		end
-
-		wred:WritePixelsBuffer(
-			v.drawPosition,
-			v.size + Vector2.one,
-			buf
-		)
-	end
-end
 
 local result = {} :: ResultImpl
 result.__index = result
@@ -87,9 +50,9 @@ function R15.unwrap(self)
     local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
     local torsoEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(388, 272) }
 
-	drawEdit(self.editableImage, leftLimbsEditableImage, pixel.R15.leftLimbs :: any)
-    drawEdit(self.editableImage, rightLimbsEditableImage, pixel.R15.rightLimbs :: any)
-    drawEdit(self.editableImage, torsoEditableImage, pixel.R15.torso :: any)
+	draw(self.editableImage, leftLimbsEditableImage, pixel.R15.leftLimbs :: any)
+    draw(self.editableImage, rightLimbsEditableImage, pixel.R15.rightLimbs :: any)
+    draw(self.editableImage, torsoEditableImage, pixel.R15.torso :: any)
 
     return setmetatable({
         leftLimbsTexture = Content.fromObject(leftLimbsEditableImage),
