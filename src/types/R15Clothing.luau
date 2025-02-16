@@ -1,8 +1,8 @@
-export type ClothingImpl = {
-    __index: ClothingImpl,
-    applyShirt: (self: Clothing, characterModel: Model) -> (),
-    applyPants: (self: Clothing, characterModel: Model) -> (),
-    delete: (self: Clothing) -> (),
+export type R15ClothingImpl = {
+    __index: R15ClothingImpl,
+    applyShirt: (self: R15Clothing, characterModel: Model) -> (),
+    applyPants: (self: R15Clothing, characterModel: Model) -> (),
+    delete: (self: R15Clothing) -> (),
 }
 
 --[=[
@@ -10,10 +10,10 @@ export type ClothingImpl = {
 local clothing = rbxclothing.R15Clothing.new(content):unwrap()
 ```
 ]=]
-export type Clothing = typeof(setmetatable({} :: {
+export type R15Clothing = typeof(setmetatable({} :: {
     leftLimbsTexture: Content,
     rightLimbsTexture: Content,
     torsoTexture: Content,
-}, {} :: ClothingImpl))
+}, {} :: R15ClothingImpl))
 
 return {}

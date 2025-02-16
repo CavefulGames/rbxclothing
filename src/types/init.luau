@@ -9,7 +9,7 @@ local rbxclothing = rbxclothing
 ]=]
 export type Rbxclothing = {
     R15Clothing: {
-        new: (content: Content) -> futures.Future<Content, R15Clothing>,
+        new: (content: Content) -> futures.Future<nil, R15Clothing>,
         maps: maps.R15ClothingMaps,
     },
 }
@@ -19,9 +19,9 @@ export type Rbxclothing = {
 local clothing = rbxclothing.R15Clothing.new(content):unwrap()
 ```
 ]=]
-export type R15Clothing = R15Clothing.Clothing
+export type R15Clothing = R15Clothing.R15Clothing
 
-export type R15ClothingImpl = R15Clothing.ClothingImpl
+export type R15ClothingImpl = R15Clothing.R15ClothingImpl
 
 export type Maps = maps.Maps
 
