@@ -1,12 +1,12 @@
 local rbxclothing = require(game:GetService('ReplicatedStorage'):WaitForChild('rbxclothing'))
-local config = require(script.config)
+local R15Clothing = rbxclothing.R15Clothing
 
-for i, v in config.rigNames do
-    local rig = workspace:WaitForChild(v)
-    
-    local shirtClothing = rbxclothing.R15Clothing.new(Content.fromAssetId(config.assetIds[i][1])):await():unwrapOk()
-    local pantClothing = rbxclothing.R15Clothing.new(Content.fromAssetId(config.assetIds[i][2])):await():unwrapOk()
-    
-    pantClothing:applyPants(rig)
-    shirtClothing:applyShirt(rig)
-end
+local clothing = R15Clothing.new()
+clothing.bodyColors = { Head = Color3.new(255, 0, 0) }
+
+local c = clothing:withContent(Content.fromAssetId(85420273217173)):await():unwrapOk()
+
+print(c:applyPants(workspace:WaitForChild('Rig')))
+
+-- local clothing = clothing:withContent(content):await()
+-- clothing.source = EditableImage
