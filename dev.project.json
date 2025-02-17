@@ -5,10 +5,10 @@
 
         "ReplicatedStorage": {
             "rbxclothing": {
-                "$path": "src",
-                "Packages": {
-                    "$path": "roblox_packages"
-                }
+                "$path": "src"    
+            },
+            "roblox_packages": {
+                "$path": "roblox_packages"
             }
         },
         

@@ -1,4 +1,4 @@
-local gt = require(script.Parent.Packages.greentea)
+local gt = require(script.Parent.Parent.roblox_packages.greentea)
 
 local ContentType: Content = gt.custom(function(t) return typeof(t) == 'Content' end, "Content")
 

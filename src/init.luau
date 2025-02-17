@@ -1,7 +1,7 @@
 local AssetService = game:GetService('AssetService')
 local drawMaps = require(script.util.drawMaps)
-local futures = require(script.Packages["luau-futures"])
-local gt = require(script.Packages.greentea)
+local futures = require(script.Parent.roblox_packages["luau-futures"])
+local gt = require(script.Parent.roblox_packages.greentea)
 local maps = require(script.util.maps)
 local R15Clothing = require(script.R15Clothing)
 
