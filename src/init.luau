@@ -1,8 +1,11 @@
 local AssetService = game:GetService('AssetService')
 local drawMaps = require(script.util.drawMaps)
 local futures = require(script.Packages["luau-futures"])
+local gt = require(script.Packages.greentea)
 local maps = require(script.util.maps)
 local R15Clothing = require(script.R15Clothing)
+
+local ContentBuildType = gt.build(gt.custom(function(t) return typeof(t) == 'Content' end, "Content"))
 
 export type Rbxclothing = {
     R15Clothing: {
@@ -14,6 +17,7 @@ export type Rbxclothing = {
 local rbxclothing = {} :: Rbxclothing
 rbxclothing.R15Clothing = {
     new = function(content)
+        ContentBuildType:assert(content)
         return futures.Future.new(function(content: Content)
             local baseEditable = AssetService:CreateEditableImageAsync(content)
             

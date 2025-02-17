@@ -1,3 +1,15 @@
+local gt = require(script.Parent.Packages.greentea)
+
+local ContentType: Content = gt.custom(function(t) return typeof(t) == 'Content' end, "Content")
+
+local ModelBuildType = gt.build(gt.custom(function(t) return t.ClassName == 'Model' end, "Model"))
+
+local R15ClothingBuildType = gt.build(gt.struct({
+    leftLimbsTexture = ContentType,
+    rightLimbsTexture = ContentType,
+    torsoTexture = ContentType,
+}))
+
 export type R15ClothingImpl = {
     __index: R15ClothingImpl,
     applyShirt: (self: R15Clothing, characterModel: Model) -> (),
@@ -10,14 +22,21 @@ export type R15ClothingImpl = {
 local clothing = rbxclothing.R15Clothing.new(content):unwrap()
 ```
 ]=]
-export type R15Clothing = typeof(setmetatable({} :: {
-    leftLimbsTexture: Content,
-    rightLimbsTexture: Content,
-    torsoTexture: Content,
-}, {} :: R15ClothingImpl))
+export type R15Clothing = typeof(setmetatable({} :: typeof(R15ClothingBuildType:type()), {} :: R15ClothingImpl))
 
 local R15Clothing = {} :: R15ClothingImpl
 R15Clothing.__index = R15Clothing
+
+local function R15ClothingIs(value): boolean
+	if type(value) == "table" and getmetatable(value) == R15Clothing then
+		R15ClothingBuildType:assert(value)
+
+		return true
+	end
+	return false
+end
+
+local R15ClothingType = gt.build(gt.custom(R15ClothingIs, "R15Clothing"))
 
 local torsoTarget = {
     "UpperTorso",
@@ -43,6 +62,9 @@ local shirtTarget = {
 }
 
 local function applyTorso(self: R15Clothing, characterModel: Model)
+    R15ClothingType:assert(self)
+    ModelBuildType:assert(characterModel)
+    
     for _, v in torsoTarget do
         local target = characterModel:FindFirstChild(v)
             
@@ -55,6 +77,9 @@ local function applyTorso(self: R15Clothing, characterModel: Model)
 end
 
 function R15Clothing.applyPants(self, characterModel)
+    R15ClothingType(self)
+    ModelBuildType:assert(characterModel)
+    
     for i, k in { "Right", "Left" } do
         for _, v in pantTarget do
             local target = characterModel:FindFirstChild(k..v)
@@ -70,6 +95,9 @@ function R15Clothing.applyPants(self, characterModel)
 end
 
 function R15Clothing.applyShirt(self, characterModel)
+    R15ClothingType:assert(self)
+    ModelBuildType:assert(characterModel)
+    
     for i, k in { "Right", "Left" } do
         for _, v in shirtTarget do
             local target = characterModel:FindFirstChild(k..v)
@@ -85,6 +113,7 @@ function R15Clothing.applyShirt(self, characterModel)
 end
 
 function R15Clothing.delete(self)
+    R15ClothingType:assert(self);
     (self.leftLimbsTexture.Object :: EditableImage):Destroy();
     (self.rightLimbsTexture.Object :: EditableImage):Destroy();
     (self.torsoTexture.Object :: EditableImage):Destroy();
