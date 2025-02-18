@@ -1,8 +1,8 @@
-local AssetService = game:GetService('AssetService')
-local drawMaps = require(script.Parent.util.drawMaps)
+-- local AssetService = game:GetService('AssetService')
+-- local drawMaps = require(script.Parent.util.drawMaps)
 local futures = require(script.Parent.Parent.roblox_packages["luau-futures"])
 local gt = require(script.Parent.Parent.roblox_packages.greentea)
-local maps = require(script.maps)
+-- local maps = require(script.maps)
 
 local ContentType: Content = gt.custom(function(t) return typeof(t) == 'Content' end, "Content")
 
@@ -61,6 +61,22 @@ export type R15Clothing = typeof(setmetatable({} :: typeof(R15ClothingBuildType:
 local R15Clothing = {} :: R15ClothingImpl
 R15Clothing.__index = R15Clothing
 
+;(R15Clothing :: any)['__newindex'] = function(self: R15Clothing, key, value)
+    if key == 'leftLimbsImage' then
+        self.leftLimbsTexture = Content.fromObject(value)
+    end
+
+    if key == 'rightLimbsImage' then
+        self.rightLimbsTexture = Content.fromObject(value)
+    end
+
+    if key == 'torsoImage' then
+        self.torsoTexture = Content.fromObject(value)
+    end
+    
+    return value
+end
+
 function R15Clothing.withBodyColors(self, bodyColors)
     self.bodyColors.Head = bodyColors.HeadColor3
     self.bodyColors.LeftFoot = bodyColors.LeftLegColor3
@@ -77,40 +93,12 @@ function R15Clothing.withBodyColors(self, bodyColors)
     self.bodyColors.RightUpperArm = bodyColors.RightArmColor3
     self.bodyColors.LowerTorso = bodyColors.TorsoColor3
     self.bodyColors.UpperTorso = bodyColors.TorsoColor3
-
+    
     return self
 end
 
 function R15Clothing.withContent(self, content)
-    return futures.Future.new(function(content: Content)
-        local leftLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
-        local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
-        local torsoEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(388, 272) }
 
-        self = setmetatable({
-            leftLimbsTexture = Content.fromObject(leftLimbsEditableImage),
-            rightLimbsTexture = Content.fromObject(rightLimbsEditableImage),
-            torsoTexture = Content.fromObject(torsoEditableImage),
-
-            leftLimbsImage = leftLimbsEditableImage,
-            rightLimbsImage = rightLimbsEditableImage,
-            torsoImage = torsoEditableImage,
-
-            bodyColors = {},
-        }, R15Clothing) :: R15Clothing
-
-        if not content.Object then
-            return self
-        end
-
-        local baseEditable = AssetService:CreateEditableImageAsync(content)
-        
-        drawMaps(baseEditable, leftLimbsEditableImage, maps.R15Clothing.leftLimbs :: any)
-        drawMaps(baseEditable, rightLimbsEditableImage, maps.R15Clothing.rightLimbs :: any)
-        drawMaps(baseEditable, torsoEditableImage, maps.R15Clothing.torso :: any)
-
-        return self
-    end, content) :: any
 end
 
 local function R15ClothingIs(value): boolean
