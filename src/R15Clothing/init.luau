@@ -1,10 +1,11 @@
--- local AssetService = game:GetService('AssetService')
--- local drawMaps = require(script.Parent.util.drawMaps)
+local AssetService = game:GetService('AssetService')
+local drawMaps = require(script.Parent.util.drawMaps)
 local futures = require(script.Parent.Parent.roblox_packages["luau-futures"])
 local gt = require(script.Parent.Parent.roblox_packages.greentea)
--- local maps = require(script.maps)
 
 local ContentType: Content = gt.custom(function(t) return typeof(t) == 'Content' end, "Content")
+
+local ContentBuildType = gt.build(ContentType)
 
 local EditableImageType: EditableImage = gt.custom(function(t) return typeof(t) == 'Object' end, "EditableImage")
 
@@ -37,7 +38,18 @@ local R15ClothingBuildType = gt.build(gt.struct({
     rightLimbsImage = EditableImageType,
     torsoImage = EditableImageType,
 
-    bodyColors = bodyColorsType
+    bodyColors = bodyColorsType,
+
+    maps = gt.struct({
+        [gt.string()] = gt.struct({
+            [gt.number()] = gt.struct({
+                position = gt.Vector2(),
+				size = gt.Vector2(),
+				drawPosition = gt.Vector2(),
+				rotation = gt.optional(gt.number()),
+            })
+        })
+    }),
 }))
 
 export type R15ClothingImpl = {
@@ -98,7 +110,34 @@ function R15Clothing.withBodyColors(self, bodyColors)
 end
 
 function R15Clothing.withContent(self, content)
+    ContentBuildType:assert(content)
 
+    return futures.Future.new(function(content: Content)
+        local leftLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
+        local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
+        local torsoEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(388, 272) }
+        local self = setmetatable({
+            leftLimbsTexture = Content.fromObject(leftLimbsEditableImage),
+            rightLimbsTexture = Content.fromObject(rightLimbsEditableImage),
+            torsoTexture = Content.fromObject(torsoEditableImage),
+            leftLimbsImage = leftLimbsEditableImage,
+            rightLimbsImage = rightLimbsEditableImage,
+            torsoImage = torsoEditableImage,
+            bodyColors = {},
+        }, R15Clothing) :: R15Clothing
+
+        if not content.Object then
+            return self
+        end
+
+        local baseEditable = AssetService:CreateEditableImageAsync(content)
+        
+        drawMaps(baseEditable, leftLimbsEditableImage, self.maps.leftLimbs :: any)
+        drawMaps(baseEditable, rightLimbsEditableImage, self.maps.rightLimbs :: any)
+        drawMaps(baseEditable, torsoEditableImage, self.maps.torso :: any)
+
+        return self
+    end, content) :: any    
 end
 
 local function R15ClothingIs(value): boolean
