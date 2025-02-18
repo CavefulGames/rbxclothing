@@ -1,5 +1,5 @@
 --[=[
-TODO: 
+TODO
 1. with(BodyColors/Content)
 ```luau
 --// 바디컬러받아서 self 의 bodyColors 를 바꿔줌
@@ -16,7 +16,58 @@ size = (들어온 이미지 크기 * (Vector2.new(585, 559) / 부위크기))
 
 3. 바디컬러 적용하기 (메쉬의 컬러 사용하면 됄듯)
 근대 아마도 이건 apply 할때 같이 하면 됄꺼같음
+
+4. new api 바꾸기
+```luau
+type (scale: number?) -> (clothing)
+
+local leftLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) * scale }
+local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) * scale }
+local torsoEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(388, 272) * scale }
+```
 ]=]
+
+--[=[
+NOTE
+```luau
+local clothing = R15Clothing.new():withBodyColors(BodyColors)
+clothing.bodyColors = { Head = Color3.new() }
+local clothing = clothing:withContent(content):await()
+clothing.source = EditableImage
+```
+
+```
+local future = futures.Future.new(function(content: Content)
+local leftLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
+local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
+local torsoEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(388, 272) }
+
+local self = setmetatable({
+    leftLimbsTexture = Content.fromObject(leftLimbsEditableImage),
+    rightLimbsTexture = Content.fromObject(rightLimbsEditableImage),
+    torsoTexture = Content.fromObject(torsoEditableImage),
+
+    leftLimbsImage = leftLimbsEditableImage,
+    rightLimbsImage = rightLimbsEditableImage,
+    torsoImage = torsoEditableImage,
+
+    bodyColors = {},
+}, R15Clothing) :: R15Clothing.R15Clothing
+
+if not content.Object then
+    return self
+end
+
+local baseEditable = AssetService:CreateEditableImageAsync(content)
+            
+drawMaps(baseEditable, leftLimbsEditableImage, R15Maps.leftLimbs :: any)
+drawMaps(baseEditable, rightLimbsEditableImage, R15Maps.rightLimbs :: any)
+drawMaps(baseEditable, torsoEditableImage, R15Maps.torso :: any)
+
+return self
+```
+]=]
+
 
 local futures = require(script.Parent.Parent.roblox_packages["luau-futures"])
 local gt = require(script.Parent.Parent.roblox_packages.greentea)
@@ -26,8 +77,6 @@ local ContentType: Content = gt.custom(function(t) return typeof(t) == 'Content'
 local ContentBuildType = gt.build(ContentType)
 
 local EditableImageType: EditableImage = gt.custom(function(t) return typeof(t) == 'Object' end, "EditableImage")
-
-local BodyColorsBuildType = gt.build(gt.custom(function(t) return typeof(t) == 'Instance' and t.ClassName == 'BodyColors' end, "BodyColors"))
 
 local ModelBuildType = gt.build(gt.custom(function(t) return t.ClassName == 'Model' end, "Model"))
 
@@ -48,6 +97,8 @@ local bodyColorsType = gt.struct({
     LeftLowerArm = gt.optional(gt.Color3()),
     LeftUpperArm = gt.optional(gt.Color3()),
 })
+
+local BodyColorsBuildType = gt.build(bodyColorsType)
 
 local R15ClothingBuildType = gt.build(gt.struct({
     leftLimbsTexture = ContentType,
@@ -75,7 +126,7 @@ local R15ClothingBuildType = gt.build(gt.struct({
 export type R15ClothingImpl = {
     __index: R15ClothingImpl,
 
-    withBodyColors: (self: R15Clothing, bodyColors: BodyColors) -> (),
+    withBodyColors: (self: R15Clothing, bodyColors: typeof(bodyColorsType)) -> (),
     withContent: (self: R15Clothing, content: Content) -> futures.Future<nil, R15Clothing>,
 
     applyShirt: (self: R15Clothing, characterModel: Model) -> (),
@@ -107,23 +158,7 @@ end
 function R15Clothing.withBodyColors(self, bodyColors)
     R15ClothingType:assert(self)
     BodyColorsBuildType:assert(bodyColors)
-
-    self.bodyColors.Head = bodyColors.HeadColor3
-    self.bodyColors.LeftFoot = bodyColors.LeftLegColor3
-    self.bodyColors.LeftLowerLeg = bodyColors.LeftLegColor3
-    self.bodyColors.LeftUpperLeg = bodyColors.LeftLegColor3
-    self.bodyColors.RightFoot = bodyColors.RightLegColor3
-    self.bodyColors.RightLowerLeg = bodyColors.RightLegColor3
-    self.bodyColors.RightUpperLeg = bodyColors.RightLegColor3
-    self.bodyColors.LeftHand = bodyColors.LeftArmColor3
-    self.bodyColors.LeftLowerArm = bodyColors.LeftArmColor3
-    self.bodyColors.LeftUpperArm = bodyColors.LeftArmColor3
-    self.bodyColors.RightHand = bodyColors.RightArmColor3
-    self.bodyColors.RightLowerArm = bodyColors.RightArmColor3
-    self.bodyColors.RightUpperArm = bodyColors.RightArmColor3
-    self.bodyColors.LowerTorso = bodyColors.TorsoColor3
-    self.bodyColors.UpperTorso = bodyColors.TorsoColor3
-    
+    self.bodyColors = bodyColors
     return self
 end
 

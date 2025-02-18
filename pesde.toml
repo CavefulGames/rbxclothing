@@ -24,6 +24,5 @@ scripts = { name = "pesde/scripts_rojo", version = "^0.1.0", target = "lune" }
 rojo = { name = "pesde/rojo", version = "^7.4.4", target = "lune" }
 
 [dependencies]
-pathfs = { name = "jiwonz/pathfs", version = "^0.6.0-rc.1", target = "lune" }
 luau-futures = { wally = "yetanotherclown/luau-futures", version = "^2.0.0-beta.3" }
 greentea = { name = "corecii/greentea", version = "^0.4.11" }
