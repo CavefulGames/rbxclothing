@@ -10,5 +10,3 @@ local c = clothing:withContent(Content.fromAssetId(85420273217173)):await():unwr
 
 print(c:applyPants(workspace:WaitForChild('Rig')))
 
--- local clothing = clothing:withContent(content):await()
--- clothing.source = EditableImage

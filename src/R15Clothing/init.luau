@@ -1,5 +1,3 @@
-local AssetService = game:GetService('AssetService')
-local drawMaps = require(script.Parent.util.drawMaps)
 local futures = require(script.Parent.Parent.roblox_packages["luau-futures"])
 local gt = require(script.Parent.Parent.roblox_packages.greentea)
 
@@ -8,6 +6,8 @@ local ContentType: Content = gt.custom(function(t) return typeof(t) == 'Content'
 local ContentBuildType = gt.build(ContentType)
 
 local EditableImageType: EditableImage = gt.custom(function(t) return typeof(t) == 'Object' end, "EditableImage")
+
+local BodyColorsBuildType = gt.build(gt.custom(function(t) return typeof(t) == 'Instance' and t.ClassName == 'BodyColors' end, "BodyColors"))
 
 local ModelBuildType = gt.build(gt.custom(function(t) return t.ClassName == 'Model' end, "Model"))
 
@@ -73,23 +73,26 @@ export type R15Clothing = typeof(setmetatable({} :: typeof(R15ClothingBuildType:
 local R15Clothing = {} :: R15ClothingImpl
 R15Clothing.__index = R15Clothing
 
-;(R15Clothing :: any)['__newindex'] = function(self: R15Clothing, key, value)
-    if key == 'leftLimbsImage' then
-        self.leftLimbsTexture = Content.fromObject(value)
-    end
+local function R15ClothingIs(value): boolean
+	if type(value) == "table" and getmetatable(value) == R15Clothing then
+		R15ClothingBuildType:assert(value)
 
-    if key == 'rightLimbsImage' then
-        self.rightLimbsTexture = Content.fromObject(value)
-    end
+		return true
+	end
+	return false
+end
 
-    if key == 'torsoImage' then
-        self.torsoTexture = Content.fromObject(value)
-    end
+local R15ClothingType = gt.build(gt.custom(R15ClothingIs, "R15Clothing"))
+
+function R15Clothing.withContent(self, content)
+    ContentBuildType:assert(content)
     
-    return value
 end
 
 function R15Clothing.withBodyColors(self, bodyColors)
+    R15ClothingType:assert(self)
+    BodyColorsBuildType:assert(bodyColors)
+
     self.bodyColors.Head = bodyColors.HeadColor3
     self.bodyColors.LeftFoot = bodyColors.LeftLegColor3
     self.bodyColors.LeftLowerLeg = bodyColors.LeftLegColor3
@@ -109,204 +112,16 @@ function R15Clothing.withBodyColors(self, bodyColors)
     return self
 end
 
-function R15Clothing.withContent(self, content)
-    ContentBuildType:assert(content)
-
-    return futures.Future.new(function(content: Content)
-        local leftLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
-        local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
-        local torsoEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(388, 272) }
-        local self = setmetatable({
-            leftLimbsTexture = Content.fromObject(leftLimbsEditableImage),
-            rightLimbsTexture = Content.fromObject(rightLimbsEditableImage),
-            torsoTexture = Content.fromObject(torsoEditableImage),
-            leftLimbsImage = leftLimbsEditableImage,
-            rightLimbsImage = rightLimbsEditableImage,
-            torsoImage = torsoEditableImage,
-            bodyColors = {},
-        }, R15Clothing) :: R15Clothing
-
-        if not content.Object then
-            return self
-        end
-
-        local baseEditable = AssetService:CreateEditableImageAsync(content)
-        
-        drawMaps(baseEditable, leftLimbsEditableImage, self.maps.leftLimbs :: any)
-        drawMaps(baseEditable, rightLimbsEditableImage, self.maps.rightLimbs :: any)
-        drawMaps(baseEditable, torsoEditableImage, self.maps.torso :: any)
-
-        return self
-    end, content) :: any    
-end
-
-local function R15ClothingIs(value): boolean
-	if type(value) == "table" and getmetatable(value) == R15Clothing then
-		R15ClothingBuildType:assert(value)
-
-		return true
-	end
-	return false
-end
-
-local R15ClothingType = gt.build(gt.custom(R15ClothingIs, "R15Clothing"))
-
-local bodyParts = {
-    torso = {
-        "UpperTorso",
-        "LowerTorso",
-    },
-    pants = {
-        leftLimbsTexture = {
-            "LeftFoot",
-            "LeftLowerLeg",
-            "LeftUpperLeg",
-        },
-        rightLimbsTexture = {
-            "RightFoot",
-            "RightLowerLeg",
-            "RightUpperLeg",
-        },
-    },
-    shirt = {
-        leftLimbsTexture = {
-            "LeftHand",
-            "LeftLowerArm",
-            "LeftUpperArm",
-        },
-        rightLimbsTexture = {
-            "RightHand",
-            "RightLowerArm",
-            "RightUpperArm",
-        },
-    },
-}
-
-local function syncClothing(self: R15Clothing, characterModel: Model)
-    self.leftLimbsTexture = Content.fromObject(self.leftLimbsImage)
-    self.rightLimbsTexture = Content.fromObject(self.rightLimbsImage)
-    self.torsoTexture = Content.fromObject(self.torsoImage)
-
-    for k, v in bodyParts.torso do
-        local color = self.bodyColors[v]
-
-        if not color then
-            continue
-        end
-
-        local target = characterModel:FindFirstChild(v)
-
-        if not target then
-            continue
-        end
-
-        (target :: MeshPart).Color = color
-    end
-
-    for _, t in bodyParts.shirt do
-        for k, v in t :: any do
-            local color = self.bodyColors[v]
-    
-            if not color then
-                continue
-            end
-    
-            local target = characterModel:FindFirstChild(v)
-    
-            if not target then
-                continue
-            end
-    
-            (target :: MeshPart).Color = color
-        end
-    end
-
-    for _, t in bodyParts.pants do
-        for k, v in t :: any do
-            local color = self.bodyColors[v]
-    
-            if not color then
-                continue
-            end
-    
-            local target = characterModel:FindFirstChild(v)
-    
-            if not target then
-                continue
-            end
-    
-            (target :: MeshPart).Color = color
-        end
-    end
-
-    if not self.bodyColors.Head then
-        return
-    end
-
-    if not characterModel:FindFirstChild('Head') then
-        return
-    end
-
-    (characterModel:FindFirstChild('Head') :: MeshPart).Color = self.bodyColors.Head
-end
-
-local function applyTorso(self: R15Clothing, characterModel: Model)
-    R15ClothingType:assert(self)
-    ModelBuildType:assert(characterModel)
-
-    for _, v in bodyParts.torso do
-        local target = characterModel:FindFirstChild(v)
-            
-        if not target then
-            continue
-        end
-        
-        (target :: MeshPart).TextureContent = self.torsoTexture
-    end
-end
-
 function R15Clothing.applyPants(self, characterModel)
     R15ClothingType:assert(self)
     ModelBuildType:assert(characterModel)
     
-    syncClothing(self, characterModel)
-
-    for k, v in bodyParts.pants do
-        for _, t in v :: any do
-            local target = characterModel:FindFirstChild(t)
-            
-            if not target then
-                continue
-            end
-            
-            (target :: MeshPart).TextureContent = self[k]
-        end 
-        
-    end
-
-    applyTorso(self, characterModel)
 end
 
 function R15Clothing.applyShirt(self, characterModel)
     R15ClothingType:assert(self)
     ModelBuildType:assert(characterModel)
     
-    syncClothing(self, characterModel)
-
-    for k, v in bodyParts.shirt do
-        for _, t in v :: any do
-            local target = characterModel:FindFirstChild(t)
-            
-            if not target then
-                continue
-            end
-            
-            (target :: MeshPart).TextureContent = self[k]
-        end 
-        
-    end
-
-    applyTorso(self, characterModel)
 end
 
 function R15Clothing.delete(self)
