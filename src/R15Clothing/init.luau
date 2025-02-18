@@ -1,3 +1,23 @@
+--[=[
+TODO: 
+1. with(BodyColors/Content)
+```luau
+--// 바디컬러받아서 self 의 bodyColors 를 바꿔줌
+export type withBodyColors -> (self: R15Clothing, bodyColors: BodyColors) -> () 
+
+--// Content 를 받아서 러스트 with 처럼 self content 를 바꿔줌 (future 사용 (비동기))
+export type withContent -> (self: R15Clothing, content: Content) -> ()
+```
+
+*2. 지금 현제 픽셀로 처리하는거 이제 비율로 처리하기 
+```luau
+size = (들어온 이미지 크기 * (Vector2.new(585, 559) / 부위크기))
+```
+
+3. 바디컬러 적용하기 (메쉬의 컬러 사용하면 됄듯)
+근대 아마도 이건 apply 할때 같이 하면 됄꺼같음
+]=]
+
 local futures = require(script.Parent.Parent.roblox_packages["luau-futures"])
 local gt = require(script.Parent.Parent.roblox_packages.greentea)
 
@@ -63,11 +83,6 @@ export type R15ClothingImpl = {
     delete: (self: R15Clothing) -> (),
 }
 
---[=[
-```luau
-local clothing = rbxclothing.R15Clothing.new(content):unwrap()
-```
-]=]
 export type R15Clothing = typeof(setmetatable({} :: typeof(R15ClothingBuildType:type()), {} :: R15ClothingImpl))
 
 local R15Clothing = {} :: R15ClothingImpl
