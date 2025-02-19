@@ -24,6 +24,7 @@ local R15ClothingBuildType = gt.build(gt.struct({
     torsoImage = EditableImageType,
 
     maps = (gt.any()) :: maps.R15ClothingMaps,
+    scale = gt.number(),
 }))
 
 export type R15ClothingImpl = {
@@ -46,7 +47,7 @@ R15Clothing.__index = R15Clothing
 function R15Clothing.new(scale)
     NumberOptBuildType:assert(scale)
     
-    local scale = scale or 1
+    local scale = scale or 1 
 
     local leftLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) * scale }
     local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) * scale }
@@ -61,8 +62,8 @@ function R15Clothing.new(scale)
         rightLimbsImage = rightLimbsEditableImage,
         torsoImage = torsoEditableImage,
     
-        bodyColors = {},
         maps = maps,
+        scale = scale,
     }, R15Clothing) :: R15Clothing
 end
 
@@ -79,9 +80,9 @@ function R15Clothing.withContent(self, content)
     return futures.Future.new(function(content: Content)
         local editableImage = AssetService:CreateEditableImageAsync(content)
         
-        drawMap(editableImage, self.leftLimbsImage, maps.leftLimbs :: any)
-        drawMap(editableImage, self.rightLimbsImage, maps.rightLimbs :: any)
-        drawMap(editableImage, self.torsoImage, maps.torso :: any)
+        drawMap(editableImage, self.leftLimbsImage, maps.leftLimbs :: any, self.scale)
+        drawMap(editableImage, self.rightLimbsImage, maps.rightLimbs :: any, self.scale)
+        drawMap(editableImage, self.torsoImage, maps.torso :: any, self.scale)
 
         return self
     end, content) :: any

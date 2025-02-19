@@ -12,12 +12,13 @@ return function (baseImage: EditableImage, targetImage: EditableImage, map: {
         drawPosition: Vector2,
         rotation: number?,
     }
-})
+}, scale: number)
     for k, v in map do
         local buf: buffer = baseImage:ReadPixelsBuffer(
             v.position,
             v.size
         )
+
 
         if v.rotation and v.rotation % 90 == 0 then
             local ox, oy = v.size.X / 2, v.size.Y / 2
