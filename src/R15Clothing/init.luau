@@ -4,19 +4,15 @@ local futures = require(script.Parent.Parent.roblox_packages["luau-futures"])
 local gt = require(script.Parent.Parent.roblox_packages.greentea)
 local maps = require(script.maps)
 
-local ContentBuildType = gt.build(gt.custom(function(t)
-	return typeof(t) == "Content"
-end))
+local ContentBuildType = gt.isTypeof("Content")
 
 local EditableImageType: EditableImage = gt.custom(function(t)
-	return typeof(t) == "Object"
-end, "EditableImage")
+    return typeof(t) == 'Object' and t:IsA("EditableImage")
+end)
 
 local NumberOptBuildType = gt.build(gt.optional(gt.number()))
 
-local ModelBuildType = gt.build(gt.custom(function(t)
-	return t.ClassName == "Model"
-end, "Model"))
+local ModelBuildType = gt.build(gt.isA("Model"))
 
 local R15ClothingBuildType = gt.build(gt.struct({
 	leftLimbsImage = EditableImageType,
@@ -29,6 +25,7 @@ local R15ClothingBuildType = gt.build(gt.struct({
 
 export type R15ClothingImpl = {
 	__index: R15ClothingImpl,
+    type: typeof(R15ClothingBuildType:type()),
 
 	new: (scale: number?) -> R15Clothing,
 	is: (self: R15Clothing) -> boolean,
@@ -64,8 +61,15 @@ function R15Clothing.new(scale)
 end
 
 function R15Clothing.is(self)
-	return type(self) == "table" and getmetatable(self) == R15Clothing and R15ClothingBuildType:matches(self)
+    if type(self) == "table" and getmetatable(self) == R15Clothing then
+        R15ClothingBuildType:assert(self)
+
+        return true
+    end
+    return false
 end
+
+R15Clothing.type = R15ClothingBuildType:type()
 
 local R15ClothingType = gt.build(gt.custom(R15Clothing.is, "R15Clothing"))
 
