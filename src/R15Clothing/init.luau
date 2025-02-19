@@ -1,51 +1,10 @@
---[=[
-TODO
-1. with(BodyColors/Content)
-```luau
---// 바디컬러받아서 self 의 bodyColors 를 바꿔줌
-export type withBodyColors -> (self: R15Clothing, bodyColors: BodyColors) -> () 
-
---// Content 를 받아서 러스트 with 처럼 self content 를 바꿔줌 (future 사용 (비동기))
-export type withContent -> (self: R15Clothing, content: Content) -> ()
-```
-
-*2. 지금 현제 픽셀로 처리하는거 이제 비율로 처리하기 
-```luau
-size = (들어온 이미지 크기 * (Vector2.new(585, 559) / 부위크기))
-```
-
-3. 바디컬러 적용하기 (메쉬의 컬러 사용하면 됄듯)
-근대 아마도 이건 apply 할때 같이 하면 됄꺼같음
-
-4. new api 바꾸기
-```luau
-type (scale: number?) -> (clothing)
-
-local leftLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) * scale }
-local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) * scale }
-local torsoEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(388, 272) * scale }
-```
-]=]
-
---[=[
-NOTE
-```luau
-local clothing = R15Clothing.new():withBodyColors(BodyColors)
-clothing.bodyColors = { Head = Color3.new() }
-local clothing = clothing:withContent(content):await()
-clothing.source = EditableImage
-```
-
-
-
-drawMaps.luau 에 scale 추가하기
-]=]
-
 local AssetService = game:GetService('AssetService')
 local drawMaps = require(script.Parent.util.drawMaps)
 local futures = require(script.Parent.Parent.roblox_packages["luau-futures"])
 local gt = require(script.Parent.Parent.roblox_packages.greentea)
 local maps = require(script.maps) 
+
+local InstanceBodyColorsBuildType: BodyColors = gt.custom(function(t) return t.ClassName == 'BodyColors' end, "BodyColors")
 
 local ContentType: Content = gt.custom(function(t) return typeof(t) == 'Content' end, "Content")
 
@@ -57,7 +16,7 @@ local NumberOptBuildType = gt.build(gt.optional(gt.number()))
 
 local ModelBuildType = gt.build(gt.custom(function(t) return t.ClassName == 'Model' end, "Model"))
 
-local bodyColorsType = gt.struct({
+local BodyColorsType = gt.struct({
     Head = gt.optional(gt.Color3()),
     UpperTorso = gt.optional(gt.Color3()),
     LowerTorso = gt.optional(gt.Color3()),
@@ -75,7 +34,7 @@ local bodyColorsType = gt.struct({
     LeftUpperArm = gt.optional(gt.Color3()),
 })
 
-local BodyColorsBuildType = gt.build(bodyColorsType)
+local ParamBodyColorsBuildType  = gt.build(gt.union(BodyColorsType, InstanceBodyColorsBuildType))
 
 local R15ClothingBuildType = gt.build(gt.struct({
     leftLimbsTexture = ContentType,
@@ -86,7 +45,6 @@ local R15ClothingBuildType = gt.build(gt.struct({
     rightLimbsImage = EditableImageType,
     torsoImage = EditableImageType,
 
-    bodyColors = bodyColorsType,
     maps = (gt.any()) :: maps.R15ClothingMaps,
 }))
 
@@ -96,7 +54,6 @@ export type R15ClothingImpl = {
     new: (scale: number?) -> R15Clothing,
     draw: typeof(drawMaps),
     is: (self: R15Clothing) -> boolean,
-    withBodyColors: (self: R15Clothing, bodyColors: typeof(bodyColorsType)) -> R15Clothing,
     withContent: (self: R15Clothing, content: Content) -> futures.Future<any, R15Clothing>,
 
     applyShirt: (self: R15Clothing, characterModel: Model) -> (),
@@ -159,13 +116,6 @@ function R15Clothing.withContent(self, content)
     end, content) :: any
 end
 
-function R15Clothing.withBodyColors(self, bodyColors)
-    R15ClothingType:assert(self)
-    BodyColorsBuildType:assert(bodyColors)
-    self.bodyColors = bodyColors
-    return self
-end
-
 local function applyEditableImages(applyTable: { [number]: string }, content: Content, characterModel: Model)
     for _, v in applyTable do
         local target = characterModel:FindFirstChild(v) :: MeshPart
@@ -178,22 +128,6 @@ local function applyEditableImages(applyTable: { [number]: string }, content: Co
     end
 end
 
-local function applyBodyColors(self: R15Clothing, characterModel: Model)
-    for k, v in self.bodyColors :: { [string]: Color3? } do
-        if not v then
-            continue
-        end
-        
-        local target = characterModel:FindFirstChild(k) :: MeshPart
-        
-        if not target then
-            continue
-        end
-
-        target.Color = v
-    end
-end
-
 function R15Clothing.applyPants(self, characterModel)
     R15ClothingType:assert(self)
     ModelBuildType:assert(characterModel)
@@ -201,8 +135,6 @@ function R15Clothing.applyPants(self, characterModel)
     self.rightLimbsTexture = Content.fromObject(self.rightLimbsImage)
     self.leftLimbsTexture = Content.fromObject(self.leftLimbsImage)
     self.torsoTexture = Content.fromObject(self.torsoImage)
-
-    applyBodyColors(self, characterModel)
 
     applyEditableImages({
         "RightFoot",
@@ -229,8 +161,6 @@ function R15Clothing.applyShirt(self, characterModel)
     self.rightLimbsTexture = Content.fromObject(self.rightLimbsImage)
     self.leftLimbsTexture = Content.fromObject(self.leftLimbsImage)
     self.torsoTexture = Content.fromObject(self.torsoImage)
-
-    applyBodyColors(self, characterModel)
 
     applyEditableImages({
         "RightHand",
