@@ -22,6 +22,7 @@ sourcemap_generator = ".pesde/scripts/sourcemap_generator.luau"
 [dev_dependencies]
 scripts = { name = "pesde/scripts_rojo", version = "^0.1.0", target = "lune" }
 rojo = { name = "pesde/rojo", version = "^7.4.4", target = "lune" }
+luau_check = { name = "jiwonz/luau_check", version = "^0.3.8", target = "lune" }
 
 [dependencies]
 luau-futures = { wally = "yetanotherclown/luau-futures", version = "^2.0.0-beta.3" }
