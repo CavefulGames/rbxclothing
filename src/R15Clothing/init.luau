@@ -36,47 +36,24 @@ local clothing = clothing:withContent(content):await()
 clothing.source = EditableImage
 ```
 
-```
-local future = futures.Future.new(function(content: Content)
-local leftLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
-local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) }
-local torsoEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(388, 272) }
 
-local self = setmetatable({
-    leftLimbsTexture = Content.fromObject(leftLimbsEditableImage),
-    rightLimbsTexture = Content.fromObject(rightLimbsEditableImage),
-    torsoTexture = Content.fromObject(torsoEditableImage),
 
-    leftLimbsImage = leftLimbsEditableImage,
-    rightLimbsImage = rightLimbsEditableImage,
-    torsoImage = torsoEditableImage,
-
-    bodyColors = {},
-}, R15Clothing) :: R15Clothing.R15Clothing
-
-if not content.Object then
-    return self
-end
-
-local baseEditable = AssetService:CreateEditableImageAsync(content)
-            
-drawMaps(baseEditable, leftLimbsEditableImage, R15Maps.leftLimbs :: any)
-drawMaps(baseEditable, rightLimbsEditableImage, R15Maps.rightLimbs :: any)
-drawMaps(baseEditable, torsoEditableImage, R15Maps.torso :: any)
-
-return self
-```
+drawMaps.luau 에 scale 추가하기
 ]=]
 
-
+local AssetService = game:GetService('AssetService')
+local drawMaps = require(script.Parent.util.drawMaps)
 local futures = require(script.Parent.Parent.roblox_packages["luau-futures"])
 local gt = require(script.Parent.Parent.roblox_packages.greentea)
+local maps = require(script.maps) 
 
 local ContentType: Content = gt.custom(function(t) return typeof(t) == 'Content' end, "Content")
 
 local ContentBuildType = gt.build(ContentType)
 
 local EditableImageType: EditableImage = gt.custom(function(t) return typeof(t) == 'Object' end, "EditableImage")
+
+local NumberOptBuildType = gt.build(gt.optional(gt.number()))
 
 local ModelBuildType = gt.build(gt.custom(function(t) return t.ClassName == 'Model' end, "Model"))
 
@@ -110,24 +87,17 @@ local R15ClothingBuildType = gt.build(gt.struct({
     torsoImage = EditableImageType,
 
     bodyColors = bodyColorsType,
-
-    maps = gt.struct({
-        [gt.string()] = gt.struct({
-            [gt.number()] = gt.struct({
-                position = gt.Vector2(),
-				size = gt.Vector2(),
-				drawPosition = gt.Vector2(),
-				rotation = gt.optional(gt.number()),
-            })
-        })
-    }),
+    maps = (gt.any()) :: maps.R15ClothingMaps,
 }))
 
 export type R15ClothingImpl = {
     __index: R15ClothingImpl,
 
-    withBodyColors: (self: R15Clothing, bodyColors: typeof(bodyColorsType)) -> (),
-    withContent: (self: R15Clothing, content: Content) -> futures.Future<nil, R15Clothing>,
+    new: (scale: number?) -> R15Clothing,
+    draw: typeof(drawMaps),
+    is: (self: R15Clothing) -> boolean,
+    withBodyColors: (self: R15Clothing, bodyColors: typeof(bodyColorsType)) -> R15Clothing,
+    withContent: (self: R15Clothing, content: Content) -> futures.Future<any, R15Clothing>,
 
     applyShirt: (self: R15Clothing, characterModel: Model) -> (),
     applyPants: (self: R15Clothing, characterModel: Model) -> (),
@@ -139,20 +109,54 @@ export type R15Clothing = typeof(setmetatable({} :: typeof(R15ClothingBuildType:
 local R15Clothing = {} :: R15ClothingImpl
 R15Clothing.__index = R15Clothing
 
-local function R15ClothingIs(value): boolean
-	if type(value) == "table" and getmetatable(value) == R15Clothing then
-		R15ClothingBuildType:assert(value)
+function R15Clothing.new(scale)
+    NumberOptBuildType:assert(scale)
+    
+    local scale = scale or 1
 
-		return true
-	end
-	return false
+    local leftLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) * scale }
+    local rightLimbsEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(264, 284) * scale }
+    local torsoEditableImage = AssetService:CreateEditableImage { Size = Vector2.new(388, 272) * scale }
+    
+    return setmetatable({
+        leftLimbsTexture = Content.fromObject(leftLimbsEditableImage),
+        rightLimbsTexture = Content.fromObject(rightLimbsEditableImage),
+        torsoTexture = Content.fromObject(torsoEditableImage),
+    
+        leftLimbsImage = leftLimbsEditableImage,
+        rightLimbsImage = rightLimbsEditableImage,
+        torsoImage = torsoEditableImage,
+    
+        bodyColors = {},
+        maps = maps,
+    }, R15Clothing) :: R15Clothing
 end
 
-local R15ClothingType = gt.build(gt.custom(R15ClothingIs, "R15Clothing"))
+R15Clothing.draw = drawMaps
+
+function R15Clothing.is(self)
+	return type(self) == "table" and getmetatable(self) == R15Clothing and R15ClothingBuildType:matches(self) 
+end
+
+local R15ClothingType = gt.build(gt.custom(R15Clothing.is, "R15Clothing"))
 
 function R15Clothing.withContent(self, content)
+    R15ClothingType:assert(self)
     ContentBuildType:assert(content)
-    
+
+    return futures.Future.new(function(content: Content)
+        if not content.Object then
+            return self
+        end 
+        
+        local editableImage = AssetService:CreateEditableImageAsync(content)
+        
+        drawMaps(editableImage, self.leftLimbsImage, maps.leftLimbs :: any)
+        drawMaps(editableImage, self.rightLimbsImage, maps.rightLimbs :: any)
+        drawMaps(editableImage, self.torsoImage, maps.torso :: any)
+
+        return self
+    end, content) :: any
 end
 
 function R15Clothing.withBodyColors(self, bodyColors)
@@ -166,6 +170,7 @@ function R15Clothing.applyPants(self, characterModel)
     R15ClothingType:assert(self)
     ModelBuildType:assert(characterModel)
     
+
 end
 
 function R15Clothing.applyShirt(self, characterModel)
