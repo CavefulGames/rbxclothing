@@ -7,7 +7,7 @@ local maps = require(script.maps)
 local ContentBuildType = gt.isTypeof("Content")
 
 local EditableImageType: EditableImage = gt.custom(function(t)
-    return typeof(t) == 'Object' and t:IsA("EditableImage")
+	return typeof(t) == "Object" and t:IsA("EditableImage")
 end)
 
 local NumberOptBuildType = gt.build(gt.optional(gt.number()))
@@ -25,7 +25,7 @@ local R15ClothingBuildType = gt.build(gt.struct({
 
 export type R15ClothingImpl = {
 	__index: R15ClothingImpl,
-    type: typeof(R15ClothingBuildType:type()),
+	type: typeof(R15ClothingBuildType:type()),
 
 	new: (scale: number?) -> R15Clothing,
 	is: (self: R15Clothing) -> boolean,
@@ -61,12 +61,12 @@ function R15Clothing.new(scale)
 end
 
 function R15Clothing.is(self)
-    if type(self) == "table" and getmetatable(self) == R15Clothing then
-        R15ClothingBuildType:assert(self)
+	if type(self) == "table" and getmetatable(self) == R15Clothing then
+		R15ClothingBuildType:assert(self)
 
-        return true
-    end
-    return false
+		return true
+	end
+	return false
 end
 
 R15Clothing.type = R15ClothingBuildType:type()
