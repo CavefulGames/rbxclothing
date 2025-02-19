@@ -145,7 +145,7 @@ function R15Clothing.withContent(self, content)
     ContentBuildType:assert(content)
 
     return futures.Future.new(function(content: Content)
-        if not content.Object then
+        if content.SourceType == Enum.ContentSourceType.None then
             return self
         end 
         
@@ -166,17 +166,88 @@ function R15Clothing.withBodyColors(self, bodyColors)
     return self
 end
 
+local function applyEditableImages(applyTable: { [number]: string }, content: Content, characterModel: Model)
+    for _, v in applyTable do
+        local target = characterModel:FindFirstChild(v) :: MeshPart
+        
+        if not target then
+            continue
+        end
+
+        target.TextureContent = content
+    end
+end
+
+local function applyBodyColors(self: R15Clothing, characterModel: Model)
+    for k, v in self.bodyColors :: { [string]: Color3? } do
+        if not v then
+            continue
+        end
+        
+        local target = characterModel:FindFirstChild(k) :: MeshPart
+        
+        if not target then
+            continue
+        end
+
+        target.Color = v
+    end
+end
+
 function R15Clothing.applyPants(self, characterModel)
     R15ClothingType:assert(self)
     ModelBuildType:assert(characterModel)
-    
 
+    self.rightLimbsTexture = Content.fromObject(self.rightLimbsImage)
+    self.leftLimbsTexture = Content.fromObject(self.leftLimbsImage)
+    self.torsoTexture = Content.fromObject(self.torsoImage)
+
+    applyBodyColors(self, characterModel)
+
+    applyEditableImages({
+        "RightFoot",
+        "RightLowerLeg",
+        "RightUpperLeg"
+    }, self.rightLimbsTexture, characterModel)
+
+    applyEditableImages({
+        "LeftFoot",
+        "LeftLowerLeg",
+        "LeftUpperLeg"
+    }, self.leftLimbsTexture, characterModel)
+
+    applyEditableImages({
+        "LowerTorso",
+        "UpperTorso",
+    }, self.torsoTexture, characterModel)
 end
 
 function R15Clothing.applyShirt(self, characterModel)
     R15ClothingType:assert(self)
     ModelBuildType:assert(characterModel)
     
+    self.rightLimbsTexture = Content.fromObject(self.rightLimbsImage)
+    self.leftLimbsTexture = Content.fromObject(self.leftLimbsImage)
+    self.torsoTexture = Content.fromObject(self.torsoImage)
+
+    applyBodyColors(self, characterModel)
+
+    applyEditableImages({
+        "RightHand",
+        "RightLowerArm",
+        "RightUpperArm"
+    }, self.rightLimbsTexture, characterModel)
+
+    applyEditableImages({
+        "LeftHand",
+        "LeftLowerArm",
+        "LeftUpperArm"
+    }, self.leftLimbsTexture, characterModel)
+
+    applyEditableImages({
+        "LowerTorso",
+        "UpperTorso",
+    }, self.torsoTexture, characterModel)
 end
 
 function R15Clothing.delete(self)

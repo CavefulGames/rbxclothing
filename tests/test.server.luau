@@ -8,5 +8,5 @@ local clothing = R15Clothing.new():withBodyColors {
 clothing.bodyColors = { Head = Color3.new(1, 1, 0) }
 local clothing = clothing:withContent(Content.fromAssetId(85420273217173)):await():unwrapOk()
 print(clothing)
--- clothing:applyShirt(workspace:WaitForChild('Rig'))
+clothing:applyShirt(workspace:WaitForChild('Rig'))
 
