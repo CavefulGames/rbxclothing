@@ -1,10 +1,8 @@
 local R15Clothing = require(script.R15Clothing)
+local drawMap = require(script.drawMap)
 
-export type Rbxclothing = {
-    R15Clothing: R15Clothing.R15ClothingImpl,
+
+return {
+    R15Clothing = R15Clothing,
+    draw = drawMap,
 }
-
-local rbxclothing = {} :: Rbxclothing
-rbxclothing.R15Clothing = R15Clothing
-
-return rbxclothing

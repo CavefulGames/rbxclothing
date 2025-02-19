@@ -1,10 +1,8 @@
 local AssetService = game:GetService('AssetService')
-local drawMaps = require(script.Parent.util.drawMaps)
+local drawMap = require(script.Parent.drawMap)
 local futures = require(script.Parent.Parent.roblox_packages["luau-futures"])
 local gt = require(script.Parent.Parent.roblox_packages.greentea)
 local maps = require(script.maps) 
-
-local InstanceBodyColorsBuildType: BodyColors = gt.custom(function(t) return t.ClassName == 'BodyColors' end, "BodyColors")
 
 local ContentType: Content = gt.custom(function(t) return typeof(t) == 'Content' end, "Content")
 
@@ -15,26 +13,6 @@ local EditableImageType: EditableImage = gt.custom(function(t) return typeof(t) 
 local NumberOptBuildType = gt.build(gt.optional(gt.number()))
 
 local ModelBuildType = gt.build(gt.custom(function(t) return t.ClassName == 'Model' end, "Model"))
-
-local BodyColorsType = gt.struct({
-    Head = gt.optional(gt.Color3()),
-    UpperTorso = gt.optional(gt.Color3()),
-    LowerTorso = gt.optional(gt.Color3()),
-    RightFoot = gt.optional(gt.Color3()),
-    RightLowerLeg = gt.optional(gt.Color3()),
-    RightUpperLeg = gt.optional(gt.Color3()),
-    LeftFoot = gt.optional(gt.Color3()),
-    LeftLowerLeg = gt.optional(gt.Color3()),
-    LeftUpperLeg = gt.optional(gt.Color3()),
-    RightHand = gt.optional(gt.Color3()),
-    RightLowerArm = gt.optional(gt.Color3()),
-    RightUpperArm = gt.optional(gt.Color3()),
-    LeftHand = gt.optional(gt.Color3()),
-    LeftLowerArm = gt.optional(gt.Color3()),
-    LeftUpperArm = gt.optional(gt.Color3()),
-})
-
-local ParamBodyColorsBuildType  = gt.build(gt.union(BodyColorsType, InstanceBodyColorsBuildType))
 
 local R15ClothingBuildType = gt.build(gt.struct({
     leftLimbsTexture = ContentType,
@@ -52,7 +30,6 @@ export type R15ClothingImpl = {
     __index: R15ClothingImpl,
 
     new: (scale: number?) -> R15Clothing,
-    draw: typeof(drawMaps),
     is: (self: R15Clothing) -> boolean,
     withContent: (self: R15Clothing, content: Content) -> futures.Future<any, R15Clothing>,
 
@@ -89,8 +66,6 @@ function R15Clothing.new(scale)
     }, R15Clothing) :: R15Clothing
 end
 
-R15Clothing.draw = drawMaps
-
 function R15Clothing.is(self)
 	return type(self) == "table" and getmetatable(self) == R15Clothing and R15ClothingBuildType:matches(self) 
 end
@@ -102,15 +77,11 @@ function R15Clothing.withContent(self, content)
     ContentBuildType:assert(content)
 
     return futures.Future.new(function(content: Content)
-        if content.SourceType == Enum.ContentSourceType.None then
-            return self
-        end 
-        
         local editableImage = AssetService:CreateEditableImageAsync(content)
         
-        drawMaps(editableImage, self.leftLimbsImage, maps.leftLimbs :: any)
-        drawMaps(editableImage, self.rightLimbsImage, maps.rightLimbs :: any)
-        drawMaps(editableImage, self.torsoImage, maps.torso :: any)
+        drawMap(editableImage, self.leftLimbsImage, maps.leftLimbs :: any)
+        drawMap(editableImage, self.rightLimbsImage, maps.rightLimbs :: any)
+        drawMap(editableImage, self.torsoImage, maps.torso :: any)
 
         return self
     end, content) :: any
@@ -182,9 +153,9 @@ end
 
 function R15Clothing.delete(self)
     R15ClothingType:assert(self);
-    (self.leftLimbsTexture.Object :: EditableImage):Destroy();
-    (self.rightLimbsTexture.Object :: EditableImage):Destroy();
-    (self.torsoTexture.Object :: EditableImage):Destroy();
+    (self.leftLimbsImage):Destroy();
+    (self.rightLimbsImage):Destroy();
+    (self.torsoImage):Destroy();
     self = setmetatable(self :: any, nil :: any)
 end
 
