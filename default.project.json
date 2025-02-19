@@ -11,12 +11,11 @@
                 "$path": "roblox_packages"
             }
         },
-        
-        "ServerScriptService": {
-            "rbxclothingTest": {
-                "$path": "tests/test.server.luau",
-                "config": {
-                    "$path": "tests/config.luau"
+
+        "StarterPlayer": {
+            "StarterPlayerScripts": {
+                "rbxclothingTest": {
+                    "$path": "tests/test.client.luau"
                 }
             }
         }
