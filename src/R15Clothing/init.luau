@@ -23,17 +23,112 @@ local R15ClothingBuildType = gt.build(gt.struct({
 	scale = gt.number(),
 }))
 
+--[=[
+	@class R15Clothing
+
+    R15's clothing
+    ]=]
 export type R15ClothingImpl = {
 	__index: R15ClothingImpl,
+
+    --[=[
+        @within R15Clothing
+
+        R15Clothing type
+
+        ```luau
+        type R15Clothing = typeof(R15Clothing.type)
+        ```
+    ]=]
 	type: typeof(R15ClothingBuildType:type()),
 
+    --[=[
+        @within R15Clothing
+
+        Create a R15Clothing
+
+        ```luau
+        local clothing = R15Clothing.new()
+        ```
+
+        @param scale The scale of editableimage
+	    @return R15Clothing
+    ]=]
 	new: (scale: number?) -> R15Clothing,
+
+    --[=[
+        @within R15Clothing
+    
+        Check the param is R15Clothing
+
+        ```luau
+        local isR15Clothing: boolean = R15Clothing.is(self)
+        ```
+
+        @param self R15Clothing
+        @return Boolean
+    ]=]
 	is: (self: R15Clothing) -> boolean,
+
+    --[=[
+        @within R15Clothing
+
+        Add content with content
+
+        ```luau
+        local clothing = R15Clothing.new():withContent(Content.fromAssetId(AssetId)):await():unwrapOk()
+        ```
+
+        @param self R15Clothing
+        @param content Content to add
+        @return Future<any, R15Clothing> 
+    ]=]
 	withContent: (self: R15Clothing, content: Content) -> futures.Future<any, R15Clothing>,
 
+    --[=[
+        @within R15Clothing
+
+        Apply shirt to the model
+
+        ```luau
+        local clothing = R15Clothing.new():withContent(Content.fromAssetId(AssetId)):await():unwrapOk()
+        clothing:applyShirt(workspace.Rig)
+        ```
+
+        @param self R15Clothing
+        @param characterModel Target to apply
+    ]=]
 	applyShirt: (self: R15Clothing, characterModel: Model) -> (),
+
+    --[=[
+        @within R15Clothing
+
+        Apply pants to the model
+
+        ```luau
+        local clothing = R15Clothing.new():withContent(Content.fromAssetId(AssetId)):await():unwrapOk()
+        clothing:applyPants(workspace.Rig)
+        ```
+
+        @param self R15Clothing
+        @param characterModel Target to apply
+    ]=]
 	applyPants: (self: R15Clothing, characterModel: Model) -> (),
-	delete: (self: R15Clothing) -> (),
+
+    --[=[
+        @within R15Clothing
+    
+        delete editable image and self
+
+        ```luau
+        local clothing = R15Clothing.new():withContent(Content.fromAssetId(AssetId)):await():unwrapOk()
+        clothing:applyPants(workspace.Rig)
+        clothing:delete()
+        ```
+
+        @param self R15Clothing
+    ]=]
+    delete: (self: R15Clothing) -> (),
 }
 
 export type R15Clothing = typeof(setmetatable({} :: typeof(R15ClothingBuildType:type()), {} :: R15ClothingImpl))
