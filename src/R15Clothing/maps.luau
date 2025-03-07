@@ -132,7 +132,7 @@ return {
 		},
 	},
 	torso = {
-		U = {
+		{ --// U
 			position = Vector2.new(231, 8),
 			size = Vector2.new(127, 63),
 			drawPosition = Vector2.new(2, 10),
