@@ -24,7 +24,7 @@ local R15ClothingBuildType = gt.build(gt.struct({
 }))
 
 --[=[
-	@class R15Clothing
+    @class R15Clothing
 
     R15's clothing
     ]=]
@@ -109,7 +109,7 @@ export type R15ClothingImpl = {
 
     --[=[
         @within R15Clothing
-    
+
         Delete editable image and self
 
         ```luau
