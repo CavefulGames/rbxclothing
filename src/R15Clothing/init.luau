@@ -56,7 +56,7 @@ export type R15ClothingImpl = {
 
 	--[=[
         @within R15Clothing
-    
+
         Check the param is R15Clothing
 
         ```luau
@@ -128,6 +128,7 @@ R15Clothing.__index = R15Clothing
 function R15Clothing.new(scale)
 	NumberOptBuildType:assert(scale)
 
+	-- selene: allow(shadowing)
 	local scale = scale or 1
 
 	local leftLimbsEditableImage = AssetService:CreateEditableImage({ Size = Vector2.new(264, 284) * scale })

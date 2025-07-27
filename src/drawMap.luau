@@ -18,7 +18,7 @@ return function(
 	},
 	scale: number
 )
-	for k, v in map do
+	for _, v in map do
 		local scaledSize = Vector2.new(math.round(v.size.X * scale), math.round(v.size.Y * scale))
 
 		local buf: buffer = baseImage:ReadPixelsBuffer(v.position, v.size)
