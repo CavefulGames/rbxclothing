@@ -1,6 +1,5 @@
 local AssetService = game:GetService("AssetService")
 local drawMap = require(script.Parent.drawMap)
-local futures = require(script.Parent.Parent.roblox_packages["luau-futures"])
 local gt = require(script.Parent.Parent.roblox_packages.greentea)
 local maps = require(script.maps)
 
@@ -27,7 +26,7 @@ local R15ClothingBuildType = gt.build(gt.struct({
     @class R15Clothing
 
     R15's clothing
-    ]=]
+]=]
 export type R15ClothingImpl = {
 	__index: R15ClothingImpl,
 
@@ -72,12 +71,12 @@ export type R15ClothingImpl = {
         Add content with content
 
         ```luau
-        local clothing = R15Clothing.new():withContent(Content.fromAssetId(AssetId)):await():unwrapOk()
+        local clothing = R15Clothing.new():withContentAsync(Content.fromAssetId(AssetId))
         ```
 
         @param content -- Content to add
     ]=]
-	withContent: (self: R15Clothing, content: Content) -> futures.Future<any, R15Clothing>,
+	withContentAsync: (self: R15Clothing, content: Content) -> R15Clothing,
 
     --[=[
         @within R15Clothing
@@ -85,7 +84,7 @@ export type R15ClothingImpl = {
         Apply shirt to the model
 
         ```luau
-        local clothing = R15Clothing.new():withContent(Content.fromAssetId(AssetId)):await():unwrapOk()
+        local clothing = R15Clothing.new():withContentAsync(Content.fromAssetId(AssetId))
         clothing:applyShirt(workspace.Rig)
         ```
 
@@ -99,7 +98,7 @@ export type R15ClothingImpl = {
         Apply pants to the model
 
         ```luau
-        local clothing = R15Clothing.new():withContent(Content.fromAssetId(AssetId)):await():unwrapOk()
+        local clothing = R15Clothing.new():withContentAsync(Content.fromAssetId(AssetId))
         clothing:applyPants(workspace.Rig)
         ```
 
@@ -113,7 +112,7 @@ export type R15ClothingImpl = {
         Delete editable image and self
 
         ```luau
-        local clothing = R15Clothing.new():withContent(Content.fromAssetId(AssetId)):await():unwrapOk()
+        local clothing = R15Clothing.new():withContentAsync(Content.fromAssetId(AssetId))
         clothing:applyPants(workspace.Rig)
         clothing:delete()
         ```
@@ -158,19 +157,17 @@ R15Clothing.type = R15ClothingBuildType:type()
 
 local R15ClothingType = gt.build(gt.custom(R15Clothing.is, "R15Clothing"))
 
-function R15Clothing.withContent(self, content)
+function R15Clothing.withContentAsync(self, content)
 	R15ClothingType:assert(self)
 	ContentBuildType:assert(content)
 
-	return futures.Future.new(function(content: Content)
-		local editableImage = AssetService:CreateEditableImageAsync(content)
+	local editableImage = AssetService:CreateEditableImageAsync(content)
 
-		drawMap(editableImage, self.leftLimbsImage, maps.leftLimbs :: any, self.scale)
-		drawMap(editableImage, self.rightLimbsImage, maps.rightLimbs :: any, self.scale)
-		drawMap(editableImage, self.torsoImage, maps.torso :: any, self.scale)
-
-		return self
-	end, content) :: any
+	drawMap(editableImage, self.leftLimbsImage, maps.leftLimbs :: any, self.scale)
+	drawMap(editableImage, self.rightLimbsImage, maps.rightLimbs :: any, self.scale)
+	drawMap(editableImage, self.torsoImage, maps.torso :: any, self.scale)
+	
+	return self
 end
 
 local function applyEditableImages(
