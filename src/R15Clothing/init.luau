@@ -30,7 +30,7 @@ local R15ClothingBuildType = gt.build(gt.struct({
 export type R15ClothingImpl = {
 	__index: R15ClothingImpl,
 
-    --[=[
+	--[=[
         @within R15Clothing
 
         R15Clothing type
@@ -41,7 +41,7 @@ export type R15ClothingImpl = {
     ]=]
 	type: typeof(R15ClothingBuildType:type()),
 
-    --[=[
+	--[=[
         @within R15Clothing
 
         Create a R15Clothing
@@ -54,7 +54,7 @@ export type R15ClothingImpl = {
     ]=]
 	new: (scale: typeof(NumberOptBuildType:type())) -> R15Clothing,
 
-    --[=[
+	--[=[
         @within R15Clothing
     
         Check the param is R15Clothing
@@ -65,7 +65,7 @@ export type R15ClothingImpl = {
     ]=]
 	is: (self: R15Clothing) -> boolean,
 
-    --[=[
+	--[=[
         @within R15Clothing
 
         Add content with content
@@ -78,7 +78,7 @@ export type R15ClothingImpl = {
     ]=]
 	withContentAsync: (self: R15Clothing, content: Content) -> R15Clothing,
 
-    --[=[
+	--[=[
         @within R15Clothing
 
         Apply shirt to the model
@@ -92,7 +92,7 @@ export type R15ClothingImpl = {
     ]=]
 	applyShirt: (self: R15Clothing, characterModel: typeof(ModelBuildType:type())) -> (),
 
-    --[=[
+	--[=[
         @within R15Clothing
 
         Apply pants to the model
@@ -106,7 +106,7 @@ export type R15ClothingImpl = {
     ]=]
 	applyPants: (self: R15Clothing, characterModel: typeof(ModelBuildType:type())) -> (),
 
-    --[=[
+	--[=[
         @within R15Clothing
 
         Delete editable image and self
@@ -117,7 +117,7 @@ export type R15ClothingImpl = {
         clothing:delete()
         ```
     ]=]
-    delete: (self: R15Clothing) -> (),
+	delete: (self: R15Clothing) -> (),
 }
 
 export type R15Clothing = typeof(setmetatable({} :: typeof(R15ClothingBuildType:type()), {} :: R15ClothingImpl))
@@ -166,7 +166,7 @@ function R15Clothing.withContentAsync(self, content)
 	drawMap(editableImage, self.leftLimbsImage, maps.leftLimbs :: any, self.scale)
 	drawMap(editableImage, self.rightLimbsImage, maps.rightLimbs :: any, self.scale)
 	drawMap(editableImage, self.torsoImage, maps.torso :: any, self.scale)
-	
+
 	return self
 end
 
