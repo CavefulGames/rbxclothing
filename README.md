@@ -1,17 +1,14 @@
 # rbxclothing
 rbxclothing is a library that allows you to put on pants and shirts using EditableImage without using Humanoid
 
-
-## installation
+## Installation
 via pesde
 ```sh
 pesde add caveful_games/rbxclothing
 ```
 
-
 ## Note
-roblox editable image is has a memory limitation
+Roblox's `EditableImage` has a memory usage limit
 
-
-## using lib
+## Dependencies
 [greentea](https://github.com/Corecii/GreenTea) <br>
