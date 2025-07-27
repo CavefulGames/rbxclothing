@@ -24,15 +24,11 @@ local function _test()
         for j=1, mx do
             local shirtClothing = R15Clothing
                 .new(scale[1])
-                :withContent(Content.fromAssetId(85420273217173))
-                :await()
-                :unwrapOk()
+                :withContentAsync(Content.fromAssetId(85420273217173))
     
             local pantsClothing = R15Clothing
                 .new(scale[2])
-                :withContent(Content.fromAssetId(140429600392212))
-                :await()
-                :unwrapOk()
+                :withContentAsync(Content.fromAssetId(140429600392212))
     
             local cloneRig = baseRig:Clone()
             cloneRig.Name = j + ((i - 1) * mx) :: any
@@ -49,16 +45,12 @@ local function _applyUserCharacter()
     local player = game:GetService('Players').LocalPlayer
 
     local shirtClothing = R15Clothing
-                .new(scale[1])
-                :withContent(Content.fromAssetId(85420273217173))
-                :await()
-                :unwrapOk()
+        .new(scale[1])
+        :withContentAsync(Content.fromAssetId(85420273217173))
     
-            local pantsClothing = R15Clothing
-                .new(scale[2])
-                :withContent(Content.fromAssetId(140429600392212))
-                :await()
-                :unwrapOk()
+    local pantsClothing = R15Clothing
+        .new(scale[2])
+        :withContentAsync(Content.fromAssetId(140429600392212))
 
     local character = player.Character or player.CharacterAdded:Wait() :: Model
 
