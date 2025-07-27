@@ -4,11 +4,14 @@
         "$className": "DataModel",
 
         "ReplicatedStorage": {
-            "rbxclothing": {
-                "$path": "src"    
-            },
-            "roblox_packages": {
-                "$path": "roblox_packages"
+            "Packages": {
+                "$className": "Folder",
+                "rbxclothing": {
+                    "$path": "src"    
+                },
+                "roblox_packages": {
+                    "$path": "roblox_packages"
+                }
             }
         },
 

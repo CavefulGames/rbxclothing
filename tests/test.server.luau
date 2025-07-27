@@ -1,4 +1,4 @@
-local rbxclothing = require(game:GetService("ReplicatedStorage"):WaitForChild("rbxclothing"))
+local rbxclothing = require(game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("rbxclothing"))
 local R15Clothing = rbxclothing.R15Clothing
 
 local baseRig = workspace:WaitForChild("Rig") :: Model
@@ -37,9 +37,7 @@ local function _test()
 	end
 end
 
-local function _applyUserCharacter()
-	local player = game:GetService("Players").LocalPlayer
-
+local function _applyUserCharacter(player: Player)
 	local shirtClothing = R15Clothing.new(scale[1]):withContentAsync(Content.fromAssetId(85420273217173))
 
 	local pantsClothing = R15Clothing.new(scale[2]):withContentAsync(Content.fromAssetId(140429600392212))
@@ -50,6 +48,10 @@ local function _applyUserCharacter()
 	shirtClothing:applyShirt(character)
 end
 
-_applyUserCharacter()
+game:GetService("Players").PlayerAdded:Connect(function(player)
+	_applyUserCharacter(player)
+end)
+
+_test()
 
 baseRig:Destroy()
