@@ -12,11 +12,9 @@
             }
         },
 
-        "StarterPlayer": {
-            "StarterPlayerScripts": {
-                "rbxclothingTest": {
-                    "$path": "tests/test.client.luau"
-                }
+        "ServerScriptService": {
+            "rbxclothingTest": {
+                "$path": "tests/test.server.luau"
             }
         }
     }
