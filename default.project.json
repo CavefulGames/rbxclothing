@@ -17,7 +17,7 @@
 
         "ServerScriptService": {
             "rbxclothingTest": {
-                "$path": "tests/test.server.luau"
+                "$path": "tests"
             }
         }
     }
