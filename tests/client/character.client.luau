@@ -15,16 +15,16 @@ local assetsIds = {
 local scale = 0.5
 
 do
-    local content = Content.fromAssetId(assetsIds.shirt)
-    local clothing = R15Clothing.new(scale):withContentAsync(content)
-
-    clothing:applyShirt(character)
-end
-
-do
     local content = Content.fromAssetId(assetsIds.pants)
     local clothing = R15Clothing.new(scale):withContentAsync(content)
 
     clothing:applyPants(character)
 end
 
+
+do
+    local content = Content.fromAssetId(assetsIds.shirt)
+    local clothing = R15Clothing.new(scale):withContentAsync(content)
+
+    clothing:applyShirt(character)
+end
