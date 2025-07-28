@@ -4,6 +4,12 @@ local gt = require(script.Parent.Parent.roblox_packages.greentea)
 local maps = require(script.maps)
 
 local ContentBuildType = gt.isTypeof("Content")
+local ShirtBuildType = gt.custom(function(t)
+	return typeof(t) == "Instance" and t:IsA("Shirt")
+end)
+local PantsBuildType = gt.custom(function(t)
+	return typeof(t) == "Instance" and t:IsA("Pants")
+end)
 
 local EditableImageType: EditableImage = gt.custom(function(t)
 	return typeof(t) == "Object" and t:IsA("EditableImage")
@@ -77,6 +83,44 @@ export type R15ClothingImpl = {
         @param content -- Content to add
     ]=]
 	withContentAsync: (self: R15Clothing, content: Content) -> R15Clothing,
+
+	--[=[
+		@within R15Clothing
+
+        Add content with shirt
+
+        ```luau
+		local player = game:GetService('Players').LocalPlayer
+		local character = player.Character or player.CharacterAdded:Wait() :: Model
+		local shirt = character:FindFirstChildOfClass("Shirt")
+		
+		if shirt then
+			local clothing = R15Clothing.new():withShirtAsync(shirt)
+		end
+        ```
+
+        @param shirt -- Shirt to add
+	]=]
+	withShirtAsync: (self: R15Clothing, shirt: Shirt) -> R15Clothing,
+
+	--[=[
+		@within R15Clothing
+
+        Add content with pants
+
+        ```luau
+		local player = game:GetService('Players').LocalPlayer
+		local character = player.Character or player.CharacterAdded:Wait() :: Model
+		local pants = character:FindFirstChildOfClass("Pants")
+		
+		if pants then
+			local clothing = R15Clothing.new():withPantsAsync(pants)
+		end
+        ```
+
+        @param pants -- Pants to add
+	]=]
+	withPantsAsync: (self: R15Clothing, pants: Pants) -> R15Clothing,
 
 	--[=[
         @within R15Clothing
@@ -163,6 +207,32 @@ function R15Clothing.withContentAsync(self, content)
 	ContentBuildType:assert(content)
 
 	local editableImage = AssetService:CreateEditableImageAsync(content)
+
+	drawMap(editableImage, self.leftLimbsImage, maps.leftLimbs :: any, self.scale)
+	drawMap(editableImage, self.rightLimbsImage, maps.rightLimbs :: any, self.scale)
+	drawMap(editableImage, self.torsoImage, maps.torso :: any, self.scale)
+
+	return self
+end
+
+function R15Clothing.withShirtAsync(self, shirt)
+	R15ClothingType:assert(self)
+	ShirtBuildType:assert(shirt)
+
+	local editableImage = AssetService:CreateEditableImageAsync(shirt.ShirtTemplate)
+
+	drawMap(editableImage, self.leftLimbsImage, maps.leftLimbs :: any, self.scale)
+	drawMap(editableImage, self.rightLimbsImage, maps.rightLimbs :: any, self.scale)
+	drawMap(editableImage, self.torsoImage, maps.torso :: any, self.scale)
+
+	return self
+end
+
+function R15Clothing.withPantsAsync(self, pants)
+	R15ClothingType:assert(self)
+	PantsBuildType:assert(pants)
+
+	local editableImage = AssetService:CreateEditableImageAsync(pants.PantsTemplate)
 
 	drawMap(editableImage, self.leftLimbsImage, maps.leftLimbs :: any, self.scale)
 	drawMap(editableImage, self.rightLimbsImage, maps.rightLimbs :: any, self.scale)
