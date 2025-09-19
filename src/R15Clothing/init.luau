@@ -1,7 +1,7 @@
 local AssetService = game:GetService("AssetService")
-local drawMap = require(script.Parent.drawMap)
-local gt = require(script.Parent.Parent.roblox_packages.greentea)
-local maps = require(script.maps)
+local drawMap = require("./drawMap")
+local gt = require("../roblox_packages/greentea")
+local maps = require("@self/maps")
 
 local ContentBuildType = gt.isTypeof("Content")
 local ShirtBuildType = gt.custom(function(t)
@@ -219,7 +219,7 @@ function R15Clothing.withShirtAsync(self, shirt)
 	R15ClothingType:assert(self)
 	ShirtBuildType:assert(shirt)
 
-	local editableImage = AssetService:CreateEditableImageAsync(shirt.ShirtTemplate)
+	local editableImage = AssetService:CreateEditableImageAsync(shirt.ShirtTemplate :: any)
 
 	drawMap(editableImage, self.leftLimbsImage, maps.leftLimbs :: any, self.scale)
 	drawMap(editableImage, self.rightLimbsImage, maps.rightLimbs :: any, self.scale)
@@ -232,7 +232,7 @@ function R15Clothing.withPantsAsync(self, pants)
 	R15ClothingType:assert(self)
 	PantsBuildType:assert(pants)
 
-	local editableImage = AssetService:CreateEditableImageAsync(pants.PantsTemplate)
+	local editableImage = AssetService:CreateEditableImageAsync(pants.PantsTemplate :: any)
 
 	drawMap(editableImage, self.leftLimbsImage, maps.leftLimbs :: any, self.scale)
 	drawMap(editableImage, self.rightLimbsImage, maps.rightLimbs :: any, self.scale)

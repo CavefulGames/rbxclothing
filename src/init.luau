@@ -1,5 +1,5 @@
-local R15Clothing = require(script.R15Clothing)
-local drawMap = require(script.drawMap)
+local R15Clothing = require("@self/R15Clothing")
+local drawMap = require("@self/drawMap")
 
 return {
 	R15Clothing = R15Clothing,
